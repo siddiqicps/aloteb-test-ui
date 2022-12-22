@@ -25,38 +25,17 @@ export default class DropDownMenu extends Component{
             
             {
                 id: 1,
-                label: 'Clients',
-                icon: 'bi-people',
-                endpoint: '/clients',
+                label: 'Dashboard',
+                icon: 'bi-file-bar-graph',
+                endpoint: '/dashboard',
             },
             {
                 id: 2,
-                label: 'Jobs',
-                icon: 'bi-briefcase',
-                endpoint: '/jobs',
-            },
-            {
-                id: 3,
-                label: 'Jobseekers',
+                label: 'Users',
                 icon: 'fe-users',
-                endpoint: '/jobseekers',
+                endpoint: '/users',
             },
-            {
-                id: 4,
-                label: 'Events',
-                icon: 'bi-calendar-check',
-                endpoint: '/events',
-            }
         ];
-
-        if(!(this.props.branchId) || this.props.branchId == "null"){
-            menuItems.push({
-                id: 4,
-                label: 'Branches',
-                icon: 'bi-building',
-                endpoint: '/branches',
-            })
-        }
 
         return menuItems;
     }

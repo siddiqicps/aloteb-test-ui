@@ -5,8 +5,9 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-ro
 import RequireAuth from "components/RequireAuth";
 import LoginPage from "pages/Login/LoginPage/LoginPage";
 // const Login = lazy(() => import('./pages/Login/Login'));
-// import DashboardPage from "./pages/DashboardPage/DashboardPage";
-// import Navbar from "./components/Header/Navbar";
+import DashboardPage from "pages/Dashboard/DashboardPage/DashboardPage";
+import Navbar from "components/Header/Navbar";
+import UserPage from 'pages/User/UserPage';
 
 
 function App() {
@@ -21,8 +22,18 @@ function App() {
                   // <!-- Begin page -->
                   <RequireAuth>
                   <div id="wrapper">
-                    {/* <Navbar /> */}
-                    {/* <DashboardPage /> */}
+                    <Navbar />
+                    <DashboardPage />
+                  </div>
+                  </RequireAuth>
+              } 
+              />
+              <Route exact path="/users" element={
+                  // <!-- Begin page -->
+                  <RequireAuth>
+                  <div id="wrapper">
+                    <Navbar />
+                    <UserPage />
                   </div>
                   </RequireAuth>
               } 

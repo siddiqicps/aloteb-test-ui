@@ -6,11 +6,6 @@ import Notification from "./Notification";
 import Welcome, { WelcomeWithRouter } from "./Welcome";
 
 import profilePic from '../../images/dummy-user.png';
-import avatar4 from '../../images/users-user-4.jpg';
-
-// import AuthService from "services/AuthService"
-
-// import LoginForm from "pages/Login/LoginForm/LoginForm"
 
 
 export default class Navbar extends Component{

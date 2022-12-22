@@ -85,7 +85,7 @@ export default class LoginForm extends Component{
 
                 <VerticalForm
                     resolver={schemaResolver}
-                    defaultValues={{ username: 'test', password: 'test' }}
+                    defaultValues={{ username: '', password: '' }}
                 >
                     <FormInput
                         label="Username"

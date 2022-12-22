@@ -28,21 +28,10 @@ export default class DashboardCards extends Component{
             // <!-- start dashboard cards here -->
             <>
                 <div className="row">
-                    <div className="col-xl-4 col-md-6">
-                        <PieChartCard />
-                    </div>
-                    <div className="col-xl-8 col-md-6">
-                        <ColumnChartCard />
-                    </div>
-                    {/* <div className="col-xl-4 col-md-12">
-                        <LineChartCard />
-                    </div> */}
-                </div>
-                {/* <div className="row">
                     <div className="col-md-12">
                         <DashboardTable />
                     </div>
-                </div> */}
+                </div>
             </>
             
             // <!-- end dashboard cards here --> 

@@ -25,7 +25,7 @@ export default class AuthService extends EventEmitter {
   }
 
   login(user, password) {
-    return this._doAuthentication('login', { "username":user, "password":password })
+    return this._doAuthentication('users/login', { "username":user, "password":password })
   }
 
   isAuthenticated() {
@@ -41,8 +41,9 @@ export default class AuthService extends EventEmitter {
 
   finishAuthentication(result) {
     localStorage.setItem('token', result.access_token)
-    localStorage.setItem('name', result.user.name)
-    localStorage.setItem('branch', result.user.branch_id)
+    localStorage.setItem('name', result.name)
+    localStorage.setItem('role', result.role_id)
+    localStorage.setItem('last_login_time', result.last_login_time)
   }
 
   getToken() {

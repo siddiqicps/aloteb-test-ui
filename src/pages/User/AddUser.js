@@ -22,34 +22,40 @@ export default class AddUser extends Component{
     constructor(props){
         super(props)
         this.state = {
-            name: props.selecetedRecord.added_date,
-            email: props.selecetedRecord.client_name,
-            username: props.selecetedRecord.client_testimonial,
-            password: props.selecetedRecord.client_profile,
-            role_id: props.selecetedRecord.client_logo,
-            contact_no: props.selecetedRecord.client_status,
+            name: props.selecetedRecord.name,
+            email: props.selecetedRecord.email,
+            username: props.selecetedRecord.username,
+            password: props.selecetedRecord.password,
+            role_id: props.selecetedRecord.role_id,
+            contact_no: props.selecetedRecord.contact_no,
             uid: props.selecetedRecord.uid,
             swal: {},
             isDisabled: false,
-            fileDataURL: '',
+            roles: '',
             page_title: 'Add New User'
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.formReset = this.formReset.bind(this)
         this.dateFromDateString = this.dateFromDateString.bind(this)
-        this.previewFile = this.previewFile.bind(this)
+        this.getRoles = this.getRoles.bind(this)
+        this.createOptions = this.createOptions.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+    }
+
+    componentDidMount(){
+        this.getRoles();
     }
 
     componentDidUpdate(prevProps){
         if(this.props.selecetedRecord.uid !== prevProps.selecetedRecord.uid
             || this.props.action !== prevProps.action){
-            this.setState({name: this.props.selecetedRecord.client_name, 
-                uid: this.props.selecetedRecord.client_id,
-                email: this.props.selecetedRecord.client_testimonial,
-                username: this.props.selecetedRecord.added_date,
-                password: this.props.selecetedRecord.client_profile,
-                role_id: this.props.selecetedRecord.client_status, 
-                contact_no: this.props.selecetedRecord.client_status,
+            this.setState({name: this.props.selecetedRecord.name, 
+                uid: this.props.selecetedRecord.uid,
+                email: this.props.selecetedRecord.email,
+                username: this.props.selecetedRecord.username,
+                password: this.props.selecetedRecord.password,
+                role_id: this.props.selecetedRecord.role_id, 
+                contact_no: this.props.selecetedRecord.contact_no,
                 isDisabled: false,
                 page_title:'Edit User'});
             if(this.props.action === 'View'){
@@ -68,20 +74,20 @@ export default class AddUser extends Component{
 
     // dateForPicker(dateStr){}
 
-    // handleChange(event) {
-    //     if(event.target.name == 'client_date'){
-    //         this.setState({[event.target.name]: event.target.value});
-    //     }else if(event.target.name == 'client_status'){
-    //         const status = event.target.checked ? 'Active' : 'Blocked' 
-    //         this.setState({[event.target.name]: status});
-    //     }else if(event.target.name == 'client_logo'){
-    //         const file = event.target.files[0];
-    //         this.setState({[event.target.name]: file})
-    //         this.previewFile(file)
-    //     }else{
-    //         this.setState({[event.target.name]: event.target.value});
-    //     }
-    // }
+    handleChange(event) {
+        // if(event.target.name == 'client_date'){
+        //     this.setState({[event.target.name]: event.target.value});
+        // }else if(event.target.name == 'client_status'){
+        //     const status = event.target.checked ? 'Active' : 'Blocked' 
+        //     this.setState({[event.target.name]: status});
+        // }else if(event.target.name == 'client_logo'){
+        //     const file = event.target.files[0];
+        //     this.setState({[event.target.name]: file})
+        //     this.previewFile(file)
+        // }else{
+            this.setState({[event.target.name]: event.target.value});
+        // }
+    }
 
     handleSubmit(event){
         event.preventDefault();
@@ -128,24 +134,26 @@ export default class AddUser extends Component{
             isDisabled: false, page_title:'Add New Client'})
     }
 
-    previewFile(file){
-        let fileReader, isCancel = false;
-        if (file) {
-            fileReader = new FileReader();
-            fileReader.onload = (e) => {
-                const { result } = e.target;
-                if (result && !isCancel) {
-                    this.setState({fileDataURL:result})
-                }
-            }
-            fileReader.readAsDataURL(file);
+    getRoles(){
+        const uri = API_URL+'/users/getRoles'
+        const method = 'post'
+        const payload = {Token : localStorage.getItem('token') }
+        axios({method: method, url:uri,  data: payload })
+            .then(res =>{
+                const roles = res.data;
+                this.setState({roles: roles});
+            })
+    }
+
+    createOptions(){
+        const roles = this.state.roles
+        let items = [];         
+        for (let i = 0; i < roles.length; i++) {             
+            items.push(<option key={i} value={roles[i].role_id}>{roles[i].role_title}</option>);   
+            //here I will be creating my options dynamically based on
+            //what props are currently passed to the parent component
         }
-        return () => {
-            isCancel = true;
-            if (fileReader && fileReader.readyState === 1) {
-                fileReader.abort();
-            }
-        }
+        return items;
     }
 
 
@@ -173,43 +181,65 @@ export default class AddUser extends Component{
                         <VerticalForm onSubmit={this.props.onSubmit} resolver={schemaResolver}>
                         <fieldset disabled={this.state.isDisabled}>
                             <FormInput
-                                label="Date"
-                                type="date"
-                                name="client_date"
-                                containerClass={'mb-3'}
-                                key="date"
-                                value = {this.state.client_date ? this.dateFromDateString(this.state.client_date) : ''}
-                                onChange={this.handleChange}
-                            />
-                            <FormInput
-                                label="Client Name"
+                                label="Username"
                                 type="text"
-                                name="client_name"
-                                placeholder="Enter client name"
+                                name="username"
                                 containerClass={'mb-3'}
-                                value = {this.state.client_name}
+                                key="username"
+                                value = {this.state.username}
                                 onChange={this.handleChange}
                             />
                             <FormInput
-                                label="Clent Testimonial"
-                                type="textarea"
-                                name="client_testimonial"
-                                placeholder="Enter client testimonial"
+                                label="Password"
+                                type="password"
+                                name="password"
+                                placeholder="Enter password"
                                 containerClass={'mb-3'}
-                                value = {this.state.client_testimonial}
+                                value = {this.state.password}
                                 onChange={this.handleChange}
                             />
                             <FormInput
-                                label="Client Profile"
-                                type="textarea"
-                                name="client_profile"
-                                placeholder="Enter client profile"
+                                label="Name"
+                                type="text"
+                                name="name"
+                                placeholder="Enter name"
                                 containerClass={'mb-3'}
-                                value = {this.state.client_profile}
+                                value = {this.state.name}
                                 onChange={this.handleChange}
                             />
+                            <FormInput
+                                label="Contact Number"
+                                type="number"
+                                name="contact_no"
+                                placeholder="Enter contact number"
+                                containerClass={'mb-3'}
+                                value = {this.state.contact_no}
+                                onChange={this.handleChange}
+                            />
+                            <FormInput
+                                label="Email"
+                                type="email"
+                                name="email"
+                                placeholder="Enter email"
+                                containerClass={'mb-3'}
+                                value = {this.state.email}
+                                onChange={this.handleChange}
+                            />
+                            <FormInput
+                                label="Select Role"
+                                type="select"
+                                name="role_id"
+                                containerClass={'mb-3'}
+                                className="form-select"
+                                key="select"
+                                value = {this.state.role_id}
+                                onChange={this.handleChange}
+                            >
+                                <option>--Select Role--</option>
+                                {this.createOptions()}
+                            </FormInput>
 
-                            <FormInput
+                            {/* <FormInput
                                 label="Client Logo"
                                 type="file"
                                 name="client_logo"
@@ -218,9 +248,9 @@ export default class AddUser extends Component{
                                 accept="image/*"
                                 onChange={this.handleChange}
                             />
-                            <img src={this.state.fileDataURL}  height="64" className={'mb-3'} />
+                            <img src={this.state.fileDataURL}  height="64" className={'mb-3'} /> */}
 
-                            <Form.Group className={'mb-3'}>
+                            {/* <Form.Group className={'mb-3'}>
                                 <Form.Check
                                     type="switch"
                                     label="Client Status"
@@ -230,7 +260,7 @@ export default class AddUser extends Component{
                                     defaultChecked = {this.state.client_status == 'Active' ? true : false}
                                     onChange={this.handleChange}
                                 />
-                            </Form.Group>
+                            </Form.Group> */}
 
                             <div className="text-end">
                                 <Button variant="success" type="submit" className="waves-effect waves-light me-1" onClick={this.handleSubmit}>
